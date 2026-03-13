@@ -1065,8 +1065,18 @@ body::after {
     </div>
     <h2 class="section-heading">⚒ Clan Treasures ⚒</h2>
   </div>
-  <div class="lots-scroll" id="lotsScroll">
-    <div class="lots-grid" id="lotsGrid"></div>
+  <div class="lots-nav-wrap">
+    <button class="lots-arrow lots-prev" id="lotsPrev" aria-label="Previous">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polyline points="13,4 7,10 13,16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="lots-viewport">
+      <div class="lots-scroll" id="lotsScroll">
+        <div class="lots-grid" id="lotsGrid"></div>
+      </div>
+    </div>
+    <button class="lots-arrow lots-next" id="lotsNext" aria-label="Next">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polyline points="7,4 13,10 7,16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
   </div>
 </section>
 
@@ -1389,41 +1399,50 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
 <style>
   .lots-wrap { padding-bottom: 40px; margin-top: 30px; }
 
-  /* Shrink image zone to fit viewport */
   .lot-img-zone { height: 220px !important; }
-
-  /* Compact body */
   .lot-body { padding: 16px 18px 18px !important; }
   .lot-name { font-size: 1rem !important; margin-bottom: 8px !important; min-height: unset !important; }
   .lot-desc { padding: 10px 12px !important; margin-bottom: 12px !important; min-height: unset !important; font-size: 0.78rem !important; }
   .lot-stats { margin-bottom: 8px !important; }
   .start-price-strip { margin-bottom: 12px !important; }
 
-  /* Scroll container */
+  /* Outer layout: arrows + viewport */
+  .lots-nav-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Viewport clips to 1 card */
+  .lots-viewport {
+    flex: 1;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  /* Scrollable row inside */
   .lots-scroll {
+    display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    padding: 0 calc(50% - 260px);
     scrollbar-width: none;
   }
   .lots-scroll::-webkit-scrollbar { display: none; }
 
-  /* Inner flex row */
   .lots-grid {
     display: flex !important;
     grid-template-columns: unset !important;
-    gap: 16px;
-    width: max-content;
   }
 
-  /* Each card snaps */
   .lot-card {
-    width: 520px !important;
-    min-width: 520px !important;
-    max-width: 520px !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
     flex-shrink: 0;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
     grid-column: unset !important;
     margin: unset !important;
     border-radius: 20px;
@@ -1434,11 +1453,75 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
     margin: unset !important;
   }
 
-  @media (max-width: 600px) {
-    .lot-card { width: 88vw !important; min-width: 88vw !important; max-width: 88vw !important; }
-    .lots-scroll { padding: 0 6vw; }
+  /* Arrows */
+  .lots-arrow {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(96,200,255,0.25);
+    background: rgba(6,18,40,0.85);
+    color: rgba(180,230,255,0.8);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all .2s;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 16px rgba(0,0,0,0.4);
+  }
+  .lots-arrow:hover {
+    border-color: rgba(96,200,255,0.7);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(96,200,255,0.2);
+  }
+  .lots-arrow:disabled {
+    opacity: 0.2;
+    cursor: default;
+    pointer-events: none;
   }
 </style>
+
+<!-- ═══ SCROLL JS ═══ -->
+<script>
+(function() {
+  function init() {
+    const scroll = document.getElementById('lotsScroll');
+    const grid   = document.getElementById('lotsGrid');
+    const prev   = document.getElementById('lotsPrev');
+    const next   = document.getElementById('lotsNext');
+    if (!grid || !grid.querySelector('.lot-card')) { setTimeout(init, 200); return; }
+
+    const cards = grid.querySelectorAll('.lot-card');
+    const total = cards.length;
+
+    function cardWidth() {
+      return scroll.offsetWidth;
+    }
+
+    function currentIndex() {
+      return Math.round(scroll.scrollLeft / cardWidth());
+    }
+
+    function goTo(idx) {
+      idx = Math.max(0, Math.min(idx, total - 1));
+      scroll.scrollTo({ left: idx * cardWidth(), behavior: 'smooth' });
+    }
+
+    prev.addEventListener('click', () => goTo(currentIndex() - 1));
+    next.addEventListener('click', () => goTo(currentIndex() + 1));
+
+    // Update disabled state on scroll
+    scroll.addEventListener('scroll', () => {
+      const i = currentIndex();
+      prev.disabled = i === 0;
+      next.disabled = i >= total - 1;
+    }, { passive: true });
+
+    // Init state
+    prev.disabled = true;
+    next.disabled = total <= 1;
+  }
+  setTimeout(init, 200);
+})();
+</script>
 
 </body>
 </html>
