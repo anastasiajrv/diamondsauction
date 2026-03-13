@@ -1462,7 +1462,7 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
     grid-template-columns: unset !important;
   }
 
-  /* Each card = full viewport width */
+  /* Each card = full viewport width, two-column layout */
   .lot-card {
     width: 100vw !important;
     min-width: 100vw !important;
@@ -1473,6 +1473,12 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
     margin: unset !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    padding: 40px max(60px, calc(50vw - 500px)) !important;
+    gap: 56px;
+    box-sizing: border-box;
   }
   .lot-card:nth-child(5) {
     grid-column: unset !important;
@@ -1480,21 +1486,51 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
     margin: unset !important;
   }
 
-  /* Card inner content max-width for readability */
+  /* Image: left column */
   .lot-img-zone {
-    max-width: 680px; margin-left: auto; margin-right: auto;
+    width: 44% !important;
+    min-width: 44% !important;
+    max-width: 44% !important;
+    height: 400px !important;
+    flex-shrink: 0;
+    margin: 0 !important;
+    border-radius: 12px;
     background: transparent !important;
   }
   .lot-img-zone img {
     mix-blend-mode: screen;
   }
   .lot-img-zone::after {
-    background: linear-gradient(to bottom, transparent, #020810) !important;
+    background: linear-gradient(to bottom, transparent, transparent) !important;
   }
   .lot-img-zone::before {
-    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(96,200,255,0.06) 0%, transparent 70%) !important;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(96,200,255,0.05) 0%, transparent 70%) !important;
   }
-  .lot-body { max-width: 680px !important; margin-left: auto !important; margin-right: auto !important; }
+
+  /* Body: right column */
+  .lot-body {
+    flex: 1;
+    max-width: unset !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  @media (max-width: 700px) {
+    .lot-card {
+      flex-direction: column !important;
+      padding: 24px 20px !important;
+      gap: 24px;
+    }
+    .lot-img-zone {
+      width: 100% !important;
+      min-width: unset !important;
+      max-width: 100% !important;
+      height: 260px !important;
+    }
+  }
 
   /* Arrows — absolute on left/right edges of viewport, vertically centered */
   .lots-arrow {
