@@ -1285,25 +1285,24 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
   /* Shrink image zone to fit viewport */
   .lot-img-zone { height: 220px !important; }
 
-  /* Compact body padding */
+  /* Compact body */
   .lot-body { padding: 16px 18px 18px !important; }
   .lot-name { font-size: 1rem !important; margin-bottom: 8px !important; min-height: unset !important; }
   .lot-desc { padding: 10px 12px !important; margin-bottom: 12px !important; min-height: unset !important; font-size: 0.78rem !important; }
   .lot-stats { margin-bottom: 8px !important; }
   .start-price-strip { margin-bottom: 12px !important; }
 
+  /* ── Carousel layout ── */
   .carousel-wrap {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    max-width: 560px;
+    position: relative;
+    max-width: 520px;
     margin: 0 auto;
   }
 
   .carousel-viewport {
     overflow: hidden;
-    flex: 1;
     border-radius: 20px;
+    width: 100%;
   }
 
   .lots-grid {
@@ -1314,41 +1313,51 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
   }
 
   .lot-card {
-    min-width: 100%;
-    max-width: 100%;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
     flex-shrink: 0;
-    /* remove nth-child centering */
+    grid-column: unset !important;
+    margin: unset !important;
+    border-radius: 20px;
+  }
+  .lot-card:nth-child(5) {
     grid-column: unset !important;
     max-width: unset !important;
     margin: unset !important;
   }
-  /* remove 5th card special treatment */
-  .lot-card:nth-child(5) {
-    grid-column: unset;
-    max-width: unset;
-    margin: unset;
-  }
 
-  /* ── Arrows ── */
+  /* ── Arrows — float beside viewport, no overflow clip ── */
   .carousel-arrow {
-    flex-shrink: 0;
-    width: 44px; height: 44px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 40px; height: 40px;
     border-radius: 50%;
     border: 1px solid rgba(96,200,255,0.25);
-    background: rgba(10,30,60,0.6);
-    color: rgba(180,230,255,0.7);
+    background: rgba(6,18,40,0.85);
+    color: rgba(180,230,255,0.8);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     transition: all .2s;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 16px rgba(0,0,0,0.4);
   }
+  /* Push wrap out by arrow width so arrows don't overlap card */
+  .carousel-wrap {
+    max-width: calc(520px + 112px);
+    padding: 0 56px;
+  }
+  .carousel-prev { left: 0; }
+  .carousel-next { right: 0; }
   .carousel-arrow:hover {
-    border-color: rgba(96,200,255,0.6);
+    border-color: rgba(96,200,255,0.7);
     color: #fff;
-    box-shadow: 0 0 20px rgba(96,200,255,0.15);
+    box-shadow: 0 0 20px rgba(96,200,255,0.2);
   }
   .carousel-arrow:disabled {
-    opacity: 0.25;
+    opacity: 0.2;
     cursor: default;
     pointer-events: none;
   }
