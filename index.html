@@ -908,28 +908,13 @@ body::after {
       </div>
     </div>
 
-    <div class="header-gems">
-      <div class="rune-circle" style="animation-delay:.3s">⚒</div>
-      <div class="rune-circle" style="animation-delay:.9s; font-size:2rem">💎</div>
-      <div class="rune-circle" style="animation-delay:1.5s">🪨</div>
-    </div>
-
-    <div class="gold-divider">
-      <div class="gold-divider-line"></div>
-      <span class="gold-divider-gem">◆</span>
-      <div class="gold-divider-line"></div>
-    </div>
-
-    <div class="timer-wrap">
-      <div class="timer-label">Auction<br>closes in</div>
-      <div class="timer-digits">
-        <div class="t-block"><span class="t-num" id="tD">05</span><span class="t-unit">days</span></div>
-        <span class="t-colon">:</span>
-        <div class="t-block"><span class="t-num" id="tH">12</span><span class="t-unit">hours</span></div>
-        <span class="t-colon">:</span>
-        <div class="t-block"><span class="t-num" id="tM">00</span><span class="t-unit">min</span></div>
-        <span class="t-colon">:</span>
-        <div class="t-block"><span class="t-num" id="tS">00</span><span class="t-unit">sec</span></div>
+    <div class="countdown-wrap">
+      <div class="countdown-label">Auction Countdown</div>
+      <div class="countdown-digits">
+        <div class="cd-block"><span class="cd-num" id="tD">05</span><span class="cd-unit">Days</span></div>
+        <div class="cd-block"><span class="cd-num" id="tH">12</span><span class="cd-unit">Hours</span></div>
+        <div class="cd-block"><span class="cd-num" id="tM">00</span><span class="cd-unit">Minutes</span></div>
+        <div class="cd-block"><span class="cd-num" id="tS">00</span><span class="cd-unit">Seconds</span></div>
       </div>
     </div>
 
@@ -1310,6 +1295,52 @@ function closeLightbox() {
 }
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
 </script>
+
+<!-- ═══ COUNTDOWN STYLES ═══ -->
+<style>
+  .countdown-wrap {
+    text-align: center;
+    padding: 32px 24px 40px;
+  }
+  .countdown-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(180,230,255,0.4);
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+  .countdown-digits {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+  }
+  .cd-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cd-num {
+    font-family: 'Russo One', sans-serif;
+    font-size: 5rem;
+    line-height: 1;
+    color: #ffffff;
+    letter-spacing: -2px;
+    display: block;
+  }
+  .cd-unit {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(180,230,255,0.45);
+    margin-top: 8px;
+    display: block;
+  }
+  @media (max-width: 600px) {
+    .countdown-digits { gap: 24px; }
+    .cd-num { font-size: 3.2rem; }
+  }
+</style>
 
 <!-- ═══ DIAMOND 3D STYLES ═══ -->
 <style>
