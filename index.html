@@ -669,6 +669,8 @@ body::after {
     box-shadow: 0 8px 40px rgba(96,200,255,0.08);
   }
   .rule-stone::after { background: linear-gradient(90deg, transparent, rgba(180,230,255,0.12), transparent); }
+  .rule-icon svg { display: block; margin: 0 auto; filter: drop-shadow(0 0 8px rgba(96,200,255,0.5)); transition: transform .3s, filter .3s; }
+  .rule-stone:hover .rule-icon svg { transform: translateY(-4px) scale(1.08); filter: drop-shadow(0 0 16px rgba(96,200,255,0.8)); }
   .rule-title { color: #ffffff; font-size: 0.55rem; letter-spacing: 3px; }
   .rule-body  { color: rgba(180,230,255,0.45); font-family: 'DM Sans', sans-serif !important; }
 
@@ -879,17 +881,115 @@ body::after {
   <h2 class="section-heading">Laws of the Clan</h2>
   <div class="rules-grid rules-grid-3">
     <div class="rule-stone">
-      <span class="rule-icon">💎</span>
+      <span class="rule-icon">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gem-top" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#e8f8ff"/>
+              <stop offset="100%" stop-color="#60c8ff"/>
+            </linearGradient>
+            <linearGradient id="gem-mid" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#60c8ff"/>
+              <stop offset="100%" stop-color="#1a6090"/>
+            </linearGradient>
+            <linearGradient id="gem-left" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#a8e4ff"/>
+              <stop offset="100%" stop-color="#3a9fd0"/>
+            </linearGradient>
+            <filter id="gem-glow">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g filter="url(#gem-glow)">
+            <!-- girdle (belt) -->
+            <polygon points="8,18 14,12 30,12 36,18 22,44" fill="url(#gem-mid)" opacity="0.15"/>
+            <!-- left facet -->
+            <polygon points="8,18 22,44 14,12" fill="url(#gem-left)" opacity="0.7"/>
+            <!-- right facet -->
+            <polygon points="36,18 22,44 30,12" fill="url(#gem-mid)" opacity="0.85"/>
+            <!-- bottom center -->
+            <polygon points="8,18 36,18 22,44" fill="url(#gem-mid)" opacity="0.5"/>
+            <!-- top table -->
+            <polygon points="14,12 30,12 36,18 8,18" fill="url(#gem-top)" opacity="0.95"/>
+            <!-- top shine -->
+            <polygon points="17,12 25,12 27,16 19,16" fill="white" opacity="0.6"/>
+            <!-- small highlight -->
+            <ellipse cx="16" cy="20" rx="2" ry="3" fill="white" opacity="0.35" transform="rotate(-15 16 20)"/>
+          </g>
+        </svg>
+      </span>
       <div class="rule-title">Currency</div>
       <p class="rule-body">Diamonds only. Earned through completed training — more knowledge, more power.</p>
     </div>
     <div class="rule-stone">
-      <span class="rule-icon">📜</span>
+      <span class="rule-icon">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="scroll-bg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a3a5c"/>
+              <stop offset="100%" stop-color="#0a1e30"/>
+            </linearGradient>
+            <filter id="scroll-glow">
+              <feGaussianBlur stdDeviation="1.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g filter="url(#scroll-glow)">
+            <!-- scroll body -->
+            <rect x="9" y="10" width="26" height="28" rx="2" fill="url(#scroll-bg)" stroke="rgba(96,200,255,0.4)" stroke-width="1"/>
+            <!-- top roll -->
+            <rect x="6" y="8" width="32" height="6" rx="3" fill="#1e4a70" stroke="rgba(96,200,255,0.5)" stroke-width="1"/>
+            <!-- bottom roll -->
+            <rect x="6" y="30" width="32" height="6" rx="3" fill="#1e4a70" stroke="rgba(96,200,255,0.5)" stroke-width="1"/>
+            <!-- text lines -->
+            <line x1="14" y1="19" x2="30" y2="19" stroke="rgba(96,200,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="23" x2="30" y2="23" stroke="rgba(96,200,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="27" x2="24" y2="27" stroke="rgba(96,200,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- top shine -->
+            <rect x="6" y="8" width="32" height="2.5" rx="1.5" fill="white" opacity="0.12"/>
+          </g>
+        </svg>
+      </span>
       <div class="rule-title">How to Bid</div>
       <p class="rule-body">Click the button on any lot, fill in the form. You can bid anytime before the auction closes.</p>
     </div>
     <div class="rule-stone">
-      <span class="rule-icon">🏆</span>
+      <span class="rule-icon">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="trophy-body" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#e8f8ff"/>
+              <stop offset="40%" stop-color="#60c8ff"/>
+              <stop offset="100%" stop-color="#1a6090"/>
+            </linearGradient>
+            <linearGradient id="trophy-base" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3a9fd0"/>
+              <stop offset="100%" stop-color="#1a5070"/>
+            </linearGradient>
+            <filter id="trophy-glow">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g filter="url(#trophy-glow)">
+            <!-- cup body -->
+            <path d="M13 8 H31 L28 22 Q22 28 22 28 Q22 28 16 22 Z" fill="url(#trophy-body)"/>
+            <!-- left handle -->
+            <path d="M13 10 Q6 10 6 17 Q6 22 13 22" stroke="#60c8ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- right handle -->
+            <path d="M31 10 Q38 10 38 17 Q38 22 31 22" stroke="#60c8ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- stem -->
+            <rect x="19.5" y="28" width="5" height="6" fill="url(#trophy-base)"/>
+            <!-- base plate -->
+            <rect x="13" y="34" width="18" height="4" rx="2" fill="url(#trophy-base)" stroke="rgba(96,200,255,0.4)" stroke-width="1"/>
+            <!-- shine on cup -->
+            <path d="M16 10 Q18 8 21 9 Q19 13 17 14 Z" fill="white" opacity="0.45"/>
+            <!-- star on cup -->
+            <path d="M22 13 L23.2 16.6 L27 16.6 L24 18.8 L25.2 22.4 L22 20.2 L18.8 22.4 L20 18.8 L17 16.6 L20.8 16.6 Z" fill="white" opacity="0.6" transform="scale(0.7) translate(9.4 5.4)"/>
+          </g>
+        </svg>
+      </span>
       <div class="rule-title">Victory</div>
       <p class="rule-body">Top 3 bids per lot win. Ties are resolved by submission time.</p>
     </div>
