@@ -1446,7 +1446,16 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
   }
 
   /* Card inner content max-width for readability */
-  .lot-img-zone { max-width: 680px; margin-left: auto; margin-right: auto; }
+  .lot-img-zone {
+    max-width: 680px; margin-left: auto; margin-right: auto;
+    background: transparent !important;
+  }
+  .lot-img-zone::after {
+    background: linear-gradient(to bottom, transparent, #020810) !important;
+  }
+  .lot-img-zone::before {
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(96,200,255,0.06) 0%, transparent 70%) !important;
+  }
   .lot-body { max-width: 680px !important; margin-left: auto !important; margin-right: auto !important; }
 
   /* Arrows — absolute on left/right edges of viewport, vertically centered */
