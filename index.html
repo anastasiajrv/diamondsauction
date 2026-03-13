@@ -1065,18 +1065,9 @@ body::after {
     </div>
     <h2 class="section-heading">⚒ Clan Treasures ⚒</h2>
   </div>
-  <div class="carousel-wrap">
-    <button class="carousel-arrow carousel-prev" id="carouselPrev" aria-label="Previous">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polyline points="13,4 7,10 13,16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div class="carousel-viewport" id="carouselViewport">
-      <div class="lots-grid" id="lotsGrid"></div>
-    </div>
-    <button class="carousel-arrow carousel-next" id="carouselNext" aria-label="Next">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polyline points="7,4 13,10 7,16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+  <div class="lots-scroll" id="lotsScroll">
+    <div class="lots-grid" id="lotsGrid"></div>
   </div>
-  <div class="carousel-dots" id="carouselDots"></div>
 </section>
 
 <footer class="site-footer">
@@ -1394,9 +1385,8 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
   }
 </style>
 
-<!-- ═══ CAROUSEL STYLES ═══ -->
+<!-- ═══ SCROLL STYLES ═══ -->
 <style>
-  /* Override grid → single-card carousel */
   .lots-wrap { padding-bottom: 40px; margin-top: 30px; }
 
   /* Shrink image zone to fit viewport */
@@ -1409,31 +1399,31 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
   .lot-stats { margin-bottom: 8px !important; }
   .start-price-strip { margin-bottom: 12px !important; }
 
-  /* ── Carousel layout ── */
-  .carousel-wrap {
-    position: relative;
-    max-width: 520px;
-    margin: 0 auto;
+  /* Scroll container */
+  .lots-scroll {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 calc(50% - 260px);
+    scrollbar-width: none;
   }
+  .lots-scroll::-webkit-scrollbar { display: none; }
 
-  .carousel-viewport {
-    overflow: hidden;
-    border-radius: 20px;
-    width: 100%;
-  }
-
+  /* Inner flex row */
   .lots-grid {
     display: flex !important;
     grid-template-columns: unset !important;
-    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
+    gap: 16px;
+    width: max-content;
   }
 
+  /* Each card snaps */
   .lot-card {
-    min-width: 100% !important;
-    max-width: 100% !important;
-    width: 100% !important;
+    width: 520px !important;
+    min-width: 520px !important;
+    max-width: 520px !important;
     flex-shrink: 0;
+    scroll-snap-align: center;
     grid-column: unset !important;
     margin: unset !important;
     border-radius: 20px;
@@ -1444,115 +1434,11 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox
     margin: unset !important;
   }
 
-  /* ── Arrows — float beside viewport, no overflow clip ── */
-  .carousel-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    border: 1px solid rgba(96,200,255,0.25);
-    background: rgba(6,18,40,0.85);
-    color: rgba(180,230,255,0.8);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: all .2s;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 16px rgba(0,0,0,0.4);
-  }
-  /* Push wrap out by arrow width so arrows don't overlap card */
-  .carousel-wrap {
-    max-width: calc(520px + 112px);
-    padding: 0 56px;
-  }
-  .carousel-prev { left: 0; }
-  .carousel-next { right: 0; }
-  .carousel-arrow:hover {
-    border-color: rgba(96,200,255,0.7);
-    color: #fff;
-    box-shadow: 0 0 20px rgba(96,200,255,0.2);
-  }
-  .carousel-arrow:disabled {
-    opacity: 0.2;
-    cursor: default;
-    pointer-events: none;
-  }
-
-  /* ── Dots ── */
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 24px;
-  }
-  .carousel-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: rgba(96,200,255,0.2);
-    border: 1px solid rgba(96,200,255,0.3);
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .carousel-dot.active {
-    background: #60c8ff;
-    box-shadow: 0 0 8px rgba(96,200,255,0.6);
-    width: 20px;
-    border-radius: 3px;
+  @media (max-width: 600px) {
+    .lot-card { width: 88vw !important; min-width: 88vw !important; max-width: 88vw !important; }
+    .lots-scroll { padding: 0 6vw; }
   }
 </style>
 
-<!-- ═══ CAROUSEL JS ═══ -->
-<script>
-  (function initCarousel() {
-    // Wait for cards to be rendered
-    const WAIT_MS = 200;
-    function setup() {
-      const grid = document.getElementById('lotsGrid');
-      const prev = document.getElementById('carouselPrev');
-      const next = document.getElementById('carouselNext');
-      const dotsEl = document.getElementById('carouselDots');
-      const cards = grid ? grid.querySelectorAll('.lot-card') : [];
-      if (!cards.length) { setTimeout(setup, WAIT_MS); return; }
-
-      const total = cards.length;
-      let current = 0;
-
-      // Build dots
-      dotsEl.innerHTML = '';
-      for (let i = 0; i < total; i++) {
-        const d = document.createElement('button');
-        d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-        d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
-        d.addEventListener('click', () => goTo(i));
-        dotsEl.appendChild(d);
-      }
-
-      function goTo(idx) {
-        current = Math.max(0, Math.min(idx, total - 1));
-        grid.style.transform = `translateX(-${current * 100}%)`;
-        dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) =>
-          d.classList.toggle('active', i === current));
-        prev.disabled = current === 0;
-        next.disabled = current === total - 1;
-      }
-
-      prev.addEventListener('click', () => goTo(current - 1));
-      next.addEventListener('click', () => goTo(current + 1));
-
-      // Swipe support
-      let startX = 0;
-      const vp = document.getElementById('carouselViewport');
-      vp.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-      vp.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - startX;
-        if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
-      });
-
-      goTo(0);
-    }
-    setTimeout(setup, WAIT_MS);
-  })();
-</script>
 </body>
 </html>
