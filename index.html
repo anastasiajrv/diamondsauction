@@ -721,10 +721,46 @@ body::after {
   .lot-name { color: #ffffff; letter-spacing: 0.5px; }
   .lot-desc { color: rgba(180,230,255,0.4); font-family: 'DM Sans', sans-serif !important; font-size: 0.82rem; }
 
-  /* ── Align bid buttons to bottom of each card ── */
-  .lot-card { display: flex; flex-direction: column; }
-  .lot-body { display: flex; flex-direction: column; flex: 1; }
-  .bid-btn  { margin-top: auto; }
+  /* ── Align all card elements across columns via subgrid ── */
+  .lots-grid {
+    grid-template-rows: auto; /* reset — subgrid handles rows */
+    align-items: stretch;
+  }
+  .lot-card {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 3; /* img-zone · lot-body · (spacing) */
+  }
+  /* Fallback for browsers without subgrid: fixed desc height */
+  @supports not (grid-template-rows: subgrid) {
+    .lot-card { display: flex; flex-direction: column; }
+    .lot-body { display: flex; flex-direction: column; flex: 1; }
+    .lot-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 4.2em; }
+    .bid-btn  { margin-top: auto; }
+  }
+  /* Inside lot-body: push button to bottom */
+  .lot-body {
+    display: flex;
+    flex-direction: column;
+  }
+  .lot-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 4.2em;
+    flex-shrink: 0;
+  }
+  .lot-name {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.6rem;
+    flex-shrink: 0;
+  }
+  .lot-stats, .start-price-strip { flex-shrink: 0; }
+  .bid-btn { margin-top: auto; }
 
   /* ── Bid button ── */
   .bid-btn {
