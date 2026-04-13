@@ -694,11 +694,75 @@ let liveData = {};
 let lastUpdated = null;
 
 /* ══════════════════════════════════════════
-   RENDER
+   AUCTION CLOSED — lots hidden, bidding disabled
 ══════════════════════════════════════════ */
+const AUCTION_CLOSED = true;
+
 function renderLots() {
   const grid = document.getElementById('lotsGrid');
   grid.innerHTML = '';
+
+  if (AUCTION_CLOSED) {
+    grid.innerHTML = `
+    <div style="
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    ">
+      <div style="
+        font-size: 5rem;
+        filter: drop-shadow(0 0 24px rgba(232,184,75,0.5));
+        animation: float 4s ease-in-out infinite;
+        line-height: 1;
+      ">⚒</div>
+
+      <h2 style="
+        font-family: 'Cinzel Decorative', serif;
+        font-size: clamp(1.6rem, 5vw, 3rem);
+        font-weight: 900;
+        background: linear-gradient(180deg, #fff8e0 0%, #ffd87a 30%, #e8b84b 60%, #8a6820 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      ">The Auction Is Closed</h2>
+
+      <div style="
+        width: 200px; height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      "></div>
+
+      <p style="
+        font-family: 'IM Fell English', serif;
+        font-style: italic;
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        color: var(--parchment-dim);
+        max-width: 520px;
+        line-height: 1.8;
+        letter-spacing: 1px;
+      ">
+        The dwarves are tallying the treasures.<br>
+        We will share the results in <strong style="color: var(--gold);">#general</strong> shortly.
+      </p>
+
+      <div style="
+        margin-top: 10px;
+        display: flex;
+        gap: 16px;
+        font-size: 1.8rem;
+        filter: drop-shadow(0 0 10px rgba(157,232,255,0.6));
+        animation: diamondPulse 2s ease-in-out infinite;
+      ">💎 💎 💎</div>
+    </div>`;
+    return;
+  }
+
   LOTS.forEach((lot, i) => {
     const data   = liveData[lot.id] || null;
     const maxBid = data ? data.maxBid : null;
@@ -707,7 +771,6 @@ function renderLots() {
     <div class="lot-card" id="card-${lot.id}">
       <div class="card-corner cc-tl"></div><div class="card-corner cc-tr"></div>
       <div class="card-corner cc-bl"></div><div class="card-corner cc-br"></div>
-
 
       <div class="lot-img-zone" onclick="openLightbox('${IMG[lot.id]}', '${lot.name}')" style="cursor:zoom-in;">
         <img src="${IMG[lot.id]}" alt="${lot.name}"
@@ -861,8 +924,10 @@ function tick() {
    INIT
 ══════════════════════════════════════════ */
 renderLots();
-fetchData();
-setInterval(fetchData, CONFIG.REFRESH_SEC * 1000);
+if (!AUCTION_CLOSED) {
+  fetchData();
+  setInterval(fetchData, CONFIG.REFRESH_SEC * 1000);
+}
 setInterval(tick, 1000);
 tick();
 </script>
